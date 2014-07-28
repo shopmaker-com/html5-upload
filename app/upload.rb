@@ -15,8 +15,6 @@ end
 
 #recieves file chunks
 post '/upload' do
-	
-
 	upload_dir = "uploads"
 	results = []
 
@@ -28,22 +26,24 @@ post '/upload' do
 		content_type :json
 		{status: 201, files: results }.to_json
 	else
-		[500, {},{}]
+		status 500 # server error
 	end
 end
 
 
-#returns the file info when javascript uploader
-#wants to find out how much of the file has been uploaded
+#returns the file info when javascript uploader wants
+#to find out how much of the file has been uploaded so far
 get '/upload' do
 
-	result = Chunkload.check('uploads', params["file"])
+	upload_dir = "uploads"
+
+	result = Chunkload.check(upload_dir, params["file"])
 
 	if result
 		content_type :json
 		{status: 200, file: result}.to_json
 	else
-		[500, {}, {}]
+		status 500 # server error
 	end
 
 end
