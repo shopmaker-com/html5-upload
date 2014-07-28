@@ -30,8 +30,20 @@
 				$('#fileupload').fileupload({
 					url: url,
 					dataType: 'json',
-					maxChunkSize: 1024 * 1024 * 10,
+					maxChunkSize: 1024 * 1024, //1 megabyte
 					
+
+					add: function (e, data) {
+		        var that = this;
+		        $.getJSON('/upload', {file: data.files[0].name}, function (result) {
+		            var file = result.file;
+		            data.uploadedBytes = file && file.size;
+		            $.blueimp.fileupload.prototype
+		                .options.add.call(that, e, data);
+		        });
+					 },
+
+
 					done: function (e, data){
 						$.each(data.result.files, function  (index, file) {
 								$('<p/>').text(file.name).appendTo('#files');
@@ -44,7 +56,9 @@
 							'width',
 							progress + '%'
 							);
-					}
+					},
+
+
 				}).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled')
 			});
 		</script>
