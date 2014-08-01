@@ -4,20 +4,19 @@ require_relative 'models/chunkload'
 
 enable :sessions
 set :session_secret, 'its_a_secret_phrase_for_large_file_upload_system_security'
+set :upload_dir, "#{settings.root}/uploads"
 
-# display a rudimentary chunked uploader frontend
+# display frontend
 get '/' do
 	erb :index
 end
 
-
-#recieves file chunks
+# receives file chunks
 post '/upload' do
-	upload_dir = "uploads"
 	results = []
 
 	params[:files].each do |file_chunk|
-		results << Chunkload.upload_chunk(file_chunk, request.env['HTTP_CONTENT_RANGE'], upload_dir)
+		results << Chunkload.upload_chunk(file_chunk, request.env['HTTP_CONTENT_RANGE'], settings.upload_dir)
 	end
 
 	if results.any?
@@ -28,14 +27,10 @@ post '/upload' do
 	end
 end
 
-
-#returns the file info when javascript uploader wants
-#to find out how much of the file has been uploaded so far
+# returns the file info when javascript uploader wants
+# to find out how much of the file has been uploaded so far
 get '/upload' do
-
-	upload_dir = "uploads"
-
-	result = Chunkload.check(upload_dir, params["file"])
+	result = Chunkload.check(settings.upload_dir, params[:file])
 
 	if result
 		content_type :json
@@ -43,5 +38,4 @@ get '/upload' do
 	else
 		status 500 # server error
 	end
-
 end
