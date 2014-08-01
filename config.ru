@@ -1,7 +1,4 @@
-require 'rubygems'
-require 'bundler'
+require 'rack'
 
-Bundler.require
-
-require './app/upload.rb'
+require_relative 'app'
 run Sinatra::Application

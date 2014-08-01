@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+body {
+  margin: 0 auto;
+  padding: 1em;
+  background: #222;
+  color: #fff;
+}
+
+a {
+  color: orange;
+  text-decoration: none;
+}
+
+img {
+  border: 0;
+  vertical-align: middle;
+}
+
+h1 {
+  line-height: 1em;
+}
+
+blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 20px;
+  border-left: 5px solid #eee;
+}
+
+table {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.fileupload-progress {
+  margin: 10px 0;
+}
+
+.fileupload-progress .progress-extended {
+  margin-top: 5px;
+}
+
+.error {
+  color: red;
+}
+
+
+
+
+
+#dropzone {
+  background: palegreen;
+  width: 600px;
+  height: 200px;
+  line-height: 50px;
+  text-align: center;
+}
+
+#dropzone.in {
+  background: lawngreen;
+  font-weight: bold;
+}
+
+#dropzone.hover {
+  background: lawngreen;
+}
+
+#dropzone.fade {
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  opacity: 1;
+}
