@@ -1,8 +1,6 @@
 require 'sinatra'
 require 'json'
-require './app/chunkload.rb'
-
-set :root, File.dirname(__FILE__)
+require_relative 'models/chunkload'
 
 enable :sessions
 set :session_secret, 'its_a_secret_phrase_for_large_file_upload_system_security'
