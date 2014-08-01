@@ -50,8 +50,8 @@ class Chunkload
 			# so when subtracted from the file length difference is one
 			new_file_path = "#{upload_dir}/#{filename}"
 			whole_argument = "#{target_path} #{new_file_path}"
-			puts "------------------rename command---------------------"
-			puts "mv #{Shellwords.escape(whole_argument)}"
+			# puts "------------------rename command---------------------"
+			# puts "mv #{Shellwords.escape(whole_argument)}"
 			Kernel.system("mv #{Shellwords.escape(target_path)} #{Shellwords.escape(new_file_path)}")
 		end 
 

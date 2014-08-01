@@ -16,7 +16,7 @@ end
 #recieves file chunks
 post '/upload' do
 	upload_dir = "uploads"
-	results = []
+	results = []2
 
 	params[:files].each do |file_chunk|
 		results << Chunkload.upload_chunk(file_chunk, request.env['HTTP_CONTENT_RANGE'], upload_dir)
