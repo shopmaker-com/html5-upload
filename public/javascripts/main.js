@@ -17,11 +17,12 @@ $(function () {
       });
     },
 
-
     done: function (e, data) {
-      $.each(data.result.files, function (index, file) {
-        $('<p/>').text(file.name).appendTo('#files');
-      })
+      if(data.result.files) {
+        $.each(data.result.files, function (index, file) {
+          $('<p/>').text(file.name).appendTo('#files');
+        })
+      }
     },
 
     progressall: function (e, data) {
