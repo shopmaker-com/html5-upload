@@ -34,8 +34,8 @@ There are two major components to this setup: the frontend, which is built with 
 In the backend, the app provides three routes, found in app/upload.rb (the main app file):
 
  - "/" aka the index, which displays the upload UI
- - POST "/upload" which accepts upload hcunks
- - GET "/upload" which accepts a JSON in the format
+ - POST "/upload" which accepts uploaded chunks
+ - GET "/upload" which accepts JSON in the format
     
         {file: <filename>}
 
