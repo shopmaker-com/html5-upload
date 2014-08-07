@@ -1,3 +1,13 @@
+ENV['RACK_ENV'] = 'test'
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
+end
+
+require 'minitest/autorun'
+require_relative '../models/chunkload.rb'
+
 def create_file(filepath, contents)
 	File.open(filepath, 'w') {|f| f.write(contents) }
 end
@@ -14,7 +24,7 @@ def mock_upload(filepath, contents)
 	result[:tempfile] = File.new(filepath, 'r')
 	result[:filename] = File.basename(filepath)
 
-	return result
+	result
 end
 
 def compare_files(file1, file2)

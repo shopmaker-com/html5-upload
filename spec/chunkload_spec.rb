@@ -1,29 +1,26 @@
-require 'minitest/autorun'
-
-require_relative "../app/chunkload.rb"
 require_relative './spec_helper.rb'
 
 describe Chunkload do
-	
 	describe "target_partialfile_name" do
 		it "adds .part at the end of the filename, and adds dir to the front" do
 			tpfn = Chunkload.target_partialfile_name("directory", "file")
-
 			tpfn.must_equal "directory/file.part"
 		end
 	end
 
 	describe "append_chunk" do
-
 		it "appends a file chunk to the existing file" do
 			#create chunk, and an existing file
 			create_file("./test.txt", "source")
 			create_file("./test.txt.part", "target")
 
+      # source = Tempfile.new('test.txt')
+      # source.write('source')
+      # target = Tempfile.new('test.txt.part')
+      # target.write('target')
+
 			Chunkload.append_chunk('./test.txt', '.', 'test.txt')
-
 			result = File.read("./test.txt.part")
-
 			result.must_equal "targetsource" #concatenated content of a chunk and a target file
 
 			#cleanup
@@ -35,16 +32,15 @@ describe Chunkload do
 			create_file("./test.txt", "source")
 
 			Chunkload.append_chunk('./test.txt', '.', 'test.txt')
-
 			File.exists?('./test.txt.part').must_equal true
 
 			#cleanup
-			File.unlink('./test.txt.part')
+      File.unlink('./test.txt')
+      File.unlink('./test.txt.part')
 		end
 	end
 
 	describe "upload_chunk" do
-
 		before do
 			random_name = rand.to_s
 			@chunk = mock_upload("./#{random_name}", 'firstchunk')
@@ -52,18 +48,14 @@ describe Chunkload do
 			Dir.mkdir(@upload_dir)
 		end
 
-
 		it "uploads the chunk" do
 			# mock upload half of the file
 			content_range = create_content_range(0, @chunk[:tempfile].size/2, @chunk[:tempfile].size) 
-			
-
 			Chunkload.upload_chunk(@chunk, content_range, @upload_dir)
-
 			File.exists?("#{@upload_dir}/#{@chunk[:filename]}.part").must_equal true
 		end
 
-		it "doesn't upload an allready uploaded chunk" do
+		it "doesn't upload a chunk that is already uploaded" do
 			#upload once
 			content_range = create_content_range(0, @chunk[:tempfile].size/2, @chunk[:tempfile].size) 
 			Chunkload.upload_chunk(@chunk, content_range, @upload_dir)
@@ -81,7 +73,6 @@ describe Chunkload do
 			content_range = create_content_range(0, @chunk[:tempfile].size-1, @chunk[:tempfile].size) 
 
 			Chunkload.upload_chunk(@chunk, content_range, @upload_dir)	
-
 			File.exists?("#{@upload_dir}/#{@chunk[:filename]}").must_equal true #without .part at the end!
 
 			#cleanup
@@ -91,6 +82,7 @@ describe Chunkload do
 		#cleanup
 		after do
 			File.unlink(@chunk[:tempfile])
+
 			if File.exists?("#{@upload_dir}/#{@chunk[:filename]}.part")
 				File.unlink("#{@upload_dir}/#{@chunk[:filename]}.part")
 			end
@@ -111,7 +103,6 @@ describe Chunkload do
 		it "returns an array with filesize and filename" do
 			expected = {size: File.size("#{@upload_dir}/#{@random_name}.part"), name: @random_name}
 			result = Chunkload.check(@upload_dir, @random_name)
-
 			result.must_equal expected
 		end
 
