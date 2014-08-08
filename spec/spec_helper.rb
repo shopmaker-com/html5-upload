@@ -6,7 +6,7 @@ if ENV['COVERAGE']
 end
 
 require 'minitest/autorun'
-require_relative '../models/chunkload.rb'
+require_relative '../models/chunk.rb'
 
 def create_file(filepath, contents)
 	File.open(filepath, 'w') {|f| f.write(contents) }
