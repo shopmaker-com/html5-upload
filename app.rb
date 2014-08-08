@@ -31,8 +31,13 @@ end
 # returns the file info when javascript uploader wants
 # to find out how much of the file has been uploaded so far
 get '/upload' do
-  content_type :json
+  if params[:file]
+    chunk = Chunk.new(Sinatra::Application.settings.upload_dir, params[:file])
+    file = {name: chunk.file_name, size: chunk.file_size}
+  else
+    file = nil
+  end
 
-  chunk = Chunk.new(Sinatra::Application.settings.upload_dir, params[:file])
-  {status: 200, file: chunk.check}.to_json
+  content_type :json
+  {status: 200, file: file}.to_json
 end

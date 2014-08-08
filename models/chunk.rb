@@ -1,6 +1,8 @@
 require 'shellwords'
 
 class Chunk
+  attr_reader :file_name
+
   def initialize(upload_dir, file_name)
     @file_name = file_name
     @upload_dir = upload_dir
@@ -30,9 +32,5 @@ class Chunk
 
   def file_size
     File.exists?(@partial_file_path) ? File.size(@partial_file_path) : 0
-  end
-
-  def check
-    {name: @file_name, size: file_size}
   end
 end
