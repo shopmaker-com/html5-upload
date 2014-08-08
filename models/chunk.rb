@@ -2,8 +2,8 @@ require 'shellwords'
 
 class Chunk
   def initialize(upload_dir, file_name)
-    @file_name = Shellwords.escape(file_name)
-    @upload_dir = Shellwords.escape(upload_dir)
+    @file_name = file_name
+    @upload_dir = upload_dir
     @file_path = "#{@upload_dir}/#{@file_name}"
     @partial_file_path = "#{@upload_dir}/#{@file_name}.part"
   end
@@ -16,7 +16,9 @@ class Chunk
     raise "http_content_rage is not set" if uploaded_bytes.zero? || expected_bytes.zero?
 
     #file on disk doesn't have the incoming chunk, append the chunk
-    Kernel.system("cat #{temp_file} >> #{@partial_file_path}") if file_size < uploaded_bytes
+    if file_size < uploaded_bytes
+      Kernel.system("cat #{Shellwords.escape(temp_file)} >> #{Shellwords.escape(@partial_file_path)}")
+    end
 
     #handle last chunk rename (remove ".part" from the end of filename)
     # it's the last chunk, because uploaded_bytes is counted from zero
