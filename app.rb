@@ -8,24 +8,24 @@ set :upload_dir, "#{settings.root}/uploads"
 
 # displays frontend
 get '/' do
-	erb :index
+  erb :index
 end
 
 # receives file chunks
 post '/upload' do
-	results = []
+  results = []
 
-	params[:files].each do |file|
+  params[:files].each do |file|
     chunk = Chunk.new(Sinatra::Application.settings.upload_dir, file[:filename])
-		results << chunk.upload(file[:tempfile].path, request.env['HTTP_CONTENT_RANGE'])
-	end
+    results << chunk.upload(file[:tempfile].path, request.env['HTTP_CONTENT_RANGE'])
+  end
 
-	if results.any?
-		content_type :json
-		{status: 201, files: results}.to_json
-	else
-		status 500
-	end
+  if results.any?
+    content_type :json
+    {status: 201, files: results}.to_json
+  else
+    status 500
+  end
 end
 
 # returns the file info when javascript uploader wants
