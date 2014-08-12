@@ -4,8 +4,8 @@ class Chunk
   attr_reader :file_name
 
   def initialize(upload_dir, file_name)
-    @file_name = file_name
     @upload_dir = upload_dir
+    @file_name = file_name
     @file_path = "#{@upload_dir}/#{@file_name}"
     @partial_file_path = "#{@upload_dir}/#{@file_name}.part"
   end
