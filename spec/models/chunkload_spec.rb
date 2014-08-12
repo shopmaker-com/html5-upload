@@ -1,10 +1,11 @@
 require_relative './spec_helper.rb'
 
 describe Chunk do
-  describe "target_partialfile_name" do
-    it "adds .part at the end of the filename, and adds dir to the front" do
-      tpfn = Chunk.partial_file_name("file")
-      tpfn.must_equal "directory/file.part"
+  describe "initialization" do
+    it "initializes a chunk to be uploaded" do
+      file = Tempfile.new([rand(999).to_s, '.ext'])
+      chunk = Chunk.new(File.dirname(file), File.basename(file))
+      chunk.file_name.must_equal File.basename(file)
     end
   end
 
