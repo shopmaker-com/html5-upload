@@ -1,8 +1,9 @@
 development: &common_settings
   uploader_mask: abcdefghijklmnopqrstuvwxyz
   webhook_url: http://localhost?file=$FILE
-  webhook_credentials: ['admin', 'password']
+  webhook_credentials: [admin, password]
   upload_dir: uploads
+  accepted_file_types: [zip,mpg,mpeg,mp4,avi,wmv,mkv]
 
 test:
   <<: *common_settings
