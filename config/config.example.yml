@@ -1,0 +1,11 @@
+development: &common_settings
+  uploader_mask: abcdefghijklmnopqrstuvwxyz
+  webhook_url: http://localhost?file=$FILE
+  webhook_credentials: ['admin', 'password']
+  upload_dir: uploads
+
+test:
+  <<: *common_settings
+
+production:
+  <<: *common_settings

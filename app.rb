@@ -1,14 +1,20 @@
 require 'sinatra'
+require 'sinatra/config_file'
+require 'sinatra/reloader' if development?
 require 'json'
 require_relative 'models/chunk'
 
-UPLOADER_MASK = ENV['UPLOADER_MASK'] || raise('UPLOADER_MASK not set')
+config_file 'config/config.yml'
 
 before do
-  raise 'id not set' if params[:id].to_i.zero?
-  raise 'secret not correct' if params[:secret] != Digest::MD5.hexdigest("#{params[:id]}-#{UPLOADER_MASK}")
+  if params[:id].to_i.zero?
+    halt(403, 'ERROR: id not set')
+  end
+  if params[:secret] != Digest::MD5.hexdigest("#{params[:id]}-#{settings.uploader_mask}")
+    halt(403, 'ERROR: secret not correct')
+  end
 
-  @upload_dir = "#{settings.root}/uploads/#{params[:id].to_i}"
+  @upload_dir = File.expand_path("#{settings.upload_dir}/#{params[:id].to_i}")
   FileUtils.mkdir(@upload_dir) unless File.directory?(@upload_dir)
 end
 

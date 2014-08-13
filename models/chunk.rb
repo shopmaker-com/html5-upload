@@ -1,4 +1,5 @@
 require 'shellwords'
+require 'open-uri'
 
 class Chunk
   attr_reader :file_name
@@ -25,7 +26,19 @@ class Chunk
     #handle last chunk rename (remove ".part" from the end of filename)
     # it's the last chunk, because uploaded_bytes is counted from zero
     # so when subtracted from the file length the difference is one
-    FileUtils.mv @partial_file_path, @file_path if expected_bytes - uploaded_bytes == 1
+    if expected_bytes - uploaded_bytes == 1
+      FileUtils.mv @partial_file_path, @file_path
+      if Sinatra::Application.settings.webhook_url.include?('$FILE')
+        begin
+          open(
+              Sinatra::Application.settings.webhook_url.sub('$FILE', CGI.escape(@file_path)),
+              http_basic_authentication: Sinatra::Application.settings.webhook_credentials
+          )
+        rescue OpenURI::HTTPError => e
+          $stderr.puts(e.inspect)
+        end
+      end
+    end
 
     {name: @file_name, size: expected_bytes, uploadedBytes: file_size}
   end
