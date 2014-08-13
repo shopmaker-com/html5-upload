@@ -85,11 +85,20 @@
             <span class="size">{%=o.formatFileSize(file.size)%} ({%=file.size%} Bytes)</span>
         </td>
         <td style="width:40%">
-            <div class="progress"></div>
+            <div class="progress">
+            {% if (file.complete) { %}
+              <span class="complete">upload complete</span>
+            {% } else { %}
+              <span class="incomplete">upload incomplete, please re-upload this file</span>
+            {% } %}
+            </div>
         </td>
         <td style="width:20%">
             {% if (file.error) { %}
                 <div><span class="error">Error</span> {%=file.error%}</div>
+            {% } %}
+            {% if (!file.complete) { %}
+                <button class="delete" data-type="DELETE" data-url="{%=file.delete_url%}">Delete</button>
             {% } %}
         </td>
  </tr>

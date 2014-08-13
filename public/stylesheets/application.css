@@ -41,13 +41,13 @@ table {
   margin-top: 5px;
 }
 
-.error {
+.error, .incomplete {
   color: red;
 }
 
-
-
-
+.complete {
+  color: palegreen;
+}
 
 #dropzone {
   background: palegreen;

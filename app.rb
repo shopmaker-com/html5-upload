@@ -60,6 +60,26 @@ end
 
 # returns a list of name and size of all partially uploaded files
 get '/list' do
-  files = Dir.glob("#{@upload_dir}/*.part").map {|file| {name: File.basename(file, '.part'), size: File.size(file)}}
+  files = []
+  Dir.glob("#{@upload_dir}/*.*").each do |file|
+    hash = {
+        name: File.basename(file, '.part'),
+        size: File.size(file),
+    }
+    if File.extname(file) == '.part'
+      hash[:delete_url] = "/delete?id=#{params[:id]}&secret=#{params[:secret]}&file=#{CGI.escape(File.basename(file))}"
+    else
+      hash[:complete] = true
+    end
+    files << hash
+  end
   {files: files}.to_json
+end
+
+delete '/delete' do
+  file = "#{@upload_dir}/#{File.basename(params[:file])}"
+  if File.file?(file)
+    File.mv(file, 'tmp')
+  end
+  raise params[:file]
 end
