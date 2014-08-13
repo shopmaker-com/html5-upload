@@ -18,6 +18,13 @@ before do
   FileUtils.mkdir(@upload_dir) unless File.directory?(@upload_dir)
 end
 
+helpers do
+  def validate_file_extension(file)
+    ext = File.extname(file)[1..-1]
+    halt(415, "ext <#{ext}> not allowed") unless settings.accepted_file_types.include?(ext)
+  end
+end
+
 # displays frontend
 get '/' do
   erb :index
@@ -28,6 +35,7 @@ post '/upload' do
   files = []
 
   params[:files].each do |file|
+    validate_file_extension(file[:filename])
     chunk = Chunk.new(@upload_dir, file[:filename])
     files << chunk.upload(file[:tempfile].path, request.env['HTTP_CONTENT_RANGE'])
   end

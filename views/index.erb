@@ -76,17 +76,13 @@
 
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
-{% if (o.files.length > 0) { %}
-  <tr><td colspan="4">Please complete these files:</td></tr>
-{% } %}
-
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
         <td style="width:20%">
             <p class="name">{%=file.name%}</p>
         </td>
         <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+            <span class="size">{%=o.formatFileSize(file.size)%} ({%=file.size%} Bytes)</span>
         </td>
         <td style="width:40%">
             <div class="progress"></div>
@@ -124,7 +120,7 @@
       url: '/upload',
       formData: {id: <%= params[:id] %>, secret: '<%= params[:secret] %>'},
       maxChunkSize: 1024 * 1024, //1 megabyte
-//      acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+      acceptFileTypes: /(\.|\/)(<%= settings.accepted_file_types.join('|') %>)$/i,
 
       add: function (e, data) {
         var that = this;
