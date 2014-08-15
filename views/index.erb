@@ -43,7 +43,15 @@
     </div>
   </div>
   <!-- The table listing the files available for upload/download -->
-  <table role="presentation">
+  <table role="presentation" class="list-of-files">
+    <thead>
+    <tr>
+      <th style="width:20%">Filename</th>
+      <th style="width:10%">Size</th>
+      <th>Status</th>
+      <th style="width:20%">Action</th>
+    </tr>
+    </thead>
     <tbody class="files"></tbody>
   </table>
 </form>
@@ -52,17 +60,17 @@
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload fade">
-        <td style="width:20%">
+        <td>
             <p class="name">{%=file.name%}</p>
             <strong class="error"></strong>
         </td>
-        <td style="width:20%">
+        <td>
             <p class="size">Processing...</p>
         </td>
-        <td style="width:40%">
+        <td>
             <div class="progress"></div>
         </td>
-        <td style="width:20%">
+        <td>
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="start" disabled>Start</button>
             {% } %}
@@ -78,13 +86,13 @@
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
-        <td style="width:20%">
+        <td>
             <p class="name">{%=file.name%}</p>
         </td>
         <td>
-            <span class="size">{%=o.formatFileSize(file.size)%} ({%=file.size%} Bytes)</span>
+            <span class="size" title="{%=file.size%} Bytes">{%=o.formatFileSize(file.size)%}</span>
         </td>
-        <td style="width:40%">
+        <td>
             <div class="progress">
             {% if (file.complete) { %}
               <span class="complete">upload complete</span>
@@ -93,7 +101,7 @@
             {% } %}
             </div>
         </td>
-        <td style="width:20%">
+        <td>
             {% if (file.error) { %}
                 <div><span class="error">Error</span> {%=file.error%}</div>
             {% } %}

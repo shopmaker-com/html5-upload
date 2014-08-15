@@ -49,6 +49,23 @@ table {
   color: palegreen;
 }
 
+.list-of-files {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.list-of-files td {
+  border: 1px solid #555;
+  padding: 0 5px;
+}
+
+.list-of-files th {
+  background: black;
+  border: 1px solid #555;
+  padding: 12px 5px;
+  text-align: left;
+}
+
 #dropzone {
   background: palegreen;
   width: 600px;
