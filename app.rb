@@ -15,7 +15,7 @@ before do
   end
 
   @upload_dir = File.expand_path("#{settings.upload_dir}/#{params[:id].to_i}")
-  FileUtils.mkdir(@upload_dir) unless File.directory?(@upload_dir)
+  Dir.mkdir(@upload_dir) unless File.directory?(@upload_dir)
 end
 
 helpers do
@@ -78,8 +78,9 @@ end
 
 delete '/delete' do
   file = "#{@upload_dir}/#{File.basename(params[:file])}"
-  if File.file?(file)
-    File.mv(file, 'tmp')
+  if File.file?(file) && File.delete(file)
+    {name: params[:file]}.to_json
+  else
+    raise 'should not happen'
   end
-  raise params[:file]
 end
