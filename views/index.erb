@@ -126,10 +126,11 @@
     'use strict';
 
     $('#fileupload').fileupload({
-      url: '/upload',
       formData: {id: <%= params[:id] %>, secret: '<%= params[:secret] %>'},
       maxChunkSize: 1024 * 1024, //1 megabyte
       acceptFileTypes: /(\.|\/)(<%= settings.accepted_file_types.join('|') %>)$/i,
+      maxRetries: 100,
+      retryTimeout: 500,
 
       add: function (e, data) {
         var that = this;
@@ -139,13 +140,15 @@
           secret: '<%= params[:secret] %>'
         }, function (result) {
           var file = result.file;
-          data.uploadedBytes = file && file.size;
-          $.blueimp.fileupload.prototype.options.add.call(that, e, data);
+          if (file.error) {
+            alert(file.error);
+          } else {
+            data.uploadedBytes = file && file.size;
+            $.blueimp.fileupload.prototype.options.add.call(that, e, data);
+          }
         });
       },
 
-      maxRetries: 100,
-      retryTimeout: 500,
       fail: function (e, data) {
         var fu = $(this).data('blueimp-fileupload') || $(this).data('fileupload'),
             retries = data.context.data('retries') || 0,
@@ -179,15 +182,6 @@
         var progress = parseInt(data.loaded / data.total * 100, 10);
         $('#progress-bar').css('width', progress + '%');
       }
-
-//      done: function (e, data) {
-//        if (data.result.files) {
-//          $.each(data.result.files, function (index, file) {
-//            console.log(file.name);
-//            $('<p/>').text(file.name).appendTo('#files');
-//          })
-//        }
-//      }
     });
 
     // Load existing files:

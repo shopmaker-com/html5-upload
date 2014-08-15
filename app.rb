@@ -52,7 +52,14 @@ end
 get '/upload' do
   if params[:file]
     chunk = Chunk.new(@upload_dir, params[:file])
-    {file: {name: chunk.file_name, size: chunk.file_size}}.to_json
+    if chunk.exists?
+      {file: {
+          name: chunk.file_name,
+          error: "ERROR: The file '#{chunk.file_name}' already exists at the server."}
+      }.to_json
+    else
+      {file: {name: chunk.file_name, size: chunk.file_size}}.to_json
+    end
   else
     raise 'should not happen'
   end

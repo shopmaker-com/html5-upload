@@ -43,6 +43,10 @@ class Chunk
     {name: @file_name, size: expected_bytes, uploadedBytes: file_size}
   end
 
+  def exists?
+    File.exists?(@file_path)
+  end
+
   def file_size
     File.exists?(@partial_file_path) ? File.size(@partial_file_path) : 0
   end
