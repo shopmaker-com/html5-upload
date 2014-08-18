@@ -86,7 +86,11 @@ end
 delete '/delete' do
   file = "#{@upload_dir}/#{File.basename(params[:file])}"
   if File.file?(file) && File.delete(file)
-    {name: params[:file]}.to_json
+    {
+        files: [
+            {params[:file] => true}
+        ]
+    }.to_json
   else
     raise 'should not happen'
   end
