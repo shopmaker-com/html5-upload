@@ -35,15 +35,18 @@ class Chunk
               http_basic_authentication: Sinatra::Application.settings.webhook_credentials
           )
         rescue OpenURI::HTTPError => e
-          $stderr.puts(e.inspect)
+          $stderr.puts(e.io.status)
         end
       end
+      complete = true
+    else
+      complete = false
     end
 
-    {name: @file_name, size: expected_bytes, uploadedBytes: file_size}
+    {name: @file_name, size: expected_bytes, uploadedBytes: uploaded_bytes, complete: complete}
   end
 
-  def exists?
+  def file_complete?
     File.exists?(@file_path)
   end
 
