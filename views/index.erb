@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>File upload</title>
-  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/dark-hive/jquery-ui.css" id="theme">
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/vader/jquery-ui.css" id="theme">
   <link rel="stylesheet" href="/stylesheets/application.css">
   <link rel="stylesheet" href="/stylesheets/jquery.fileupload.css">
   <link rel="stylesheet" href="/stylesheets/jquery.fileupload-ui.css">
@@ -16,6 +16,7 @@
   </noscript>
 </head>
 <body>
+<div id="dropzone">Drop files here</div>
 
 <!-- The file upload form used as target for the file upload widget -->
 <form id="fileupload" action="/upload" method="POST" enctype="multipart/form-data">
@@ -27,8 +28,8 @@
         <span>Add files...</span>
         <input type="file" name="files[]" multiple>
       </span>
-      <button type="submit" class="start">Start upload</button>
-      <button type="reset" class="cancel">Cancel upload</button>
+      <button type="submit" class="start">Start all uploads</button>
+      <button type="reset" class="cancel">Cancel all uploads</button>
       <!--<button type="button" class="delete">Delete</button>-->
       <!--<input type="checkbox" class="toggle">-->
       <!-- The global file processing state -->
@@ -37,11 +38,12 @@
     <!-- The global progress state -->
     <div class="fileupload-progress">
       <!-- The global progress bar -->
-      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-      <!-- The extended global progress state -->
-      <div class="progress-extended">&nbsp;</div>
+      <div aria-valuenow="0" aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress ui-progressbar ui-widget ui-widget-content ui-corner-all">
+        <div id="progressbar" style="width: 0" class="ui-progressbar-value ui-widget-header ui-corner-left"></div>
+      </div>
     </div>
   </div>
+
   <!-- The table listing the files available for upload/download -->
   <table role="presentation" class="list-of-files">
     <thead>
@@ -109,7 +111,7 @@
                 <button class="delete" data-type="DELETE" data-url="{%=file.delete_url%}">Delete</button>
             {% } %}
         </td>
- </tr>
+    </tr>
 {% } %}
 </script>
 
@@ -139,6 +141,8 @@
       acceptFileTypes: /(\.|\/)(<%= settings.accepted_file_types.join('|') %>)$/i,
       maxRetries: 100,
       retryTimeout: 500,
+      sequentialUploads: true,
+      dropZone: $('#dropzone'),
 
       add: function (e, data) {
         var that = this;
@@ -188,7 +192,7 @@
 
       progressall: function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress-bar').css('width', progress + '%');
+        $('#progressbar').css('width', progress + '%');
       }
     });
 
@@ -204,6 +208,39 @@
     }).done(function (result) {
       $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
     });
+  });
+
+//  $(document).bind('drop dragover', function (e) {
+//    e.preventDefault();
+//  });
+
+  $(document).bind('dragover', function (e) {
+    var dropZone = $('#dropzone'), timeout = window.dropZoneTimeout;
+    if (timeout) {
+      clearTimeout(timeout);
+    } else {
+      dropZone.addClass('in');
+    }
+
+    var found = false, node = e.target;
+    do {
+      if (node === dropZone[0]) {
+        found = true;
+        break;
+      }
+      node = node.parentNode;
+    } while (node != null);
+
+    if (found) {
+      dropZone.addClass('hover');
+    } else {
+      dropZone.removeClass('hover');
+    }
+
+    window.dropZoneTimeout = setTimeout(function () {
+      window.dropZoneTimeout = null;
+      dropZone.removeClass('in hover');
+    }, 1000);
   });
 </script>
 

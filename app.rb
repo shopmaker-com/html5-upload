@@ -52,7 +52,7 @@ end
 get '/upload' do
   if params[:file]
     chunk = Chunk.new(@upload_dir, params[:file])
-    if chunk.exists?
+    if chunk.file_complete?
       {file: {
           name: chunk.file_name,
           error: "ERROR: The file '#{chunk.file_name}' already exists at the server."}
@@ -86,7 +86,11 @@ end
 delete '/delete' do
   file = "#{@upload_dir}/#{File.basename(params[:file])}"
   if File.file?(file) && File.delete(file)
-    {name: params[:file]}.to_json
+    {
+        files: [
+            {params[:file] => true}
+        ]
+    }.to_json
   else
     raise 'should not happen'
   end

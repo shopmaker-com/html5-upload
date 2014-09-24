@@ -27,7 +27,8 @@ class Chunk
     # it's the last chunk, because uploaded_bytes is counted from zero
     # so when subtracted from the file length the difference is one
     if expected_bytes - uploaded_bytes == 1
-      FileUtils.mv @partial_file_path, @file_path
+      move_to = file_complete? ? Dir::Tmpname.make_tmpname(@file_path, nil) : @file_path
+      FileUtils.mv @partial_file_path, move_to
       if Sinatra::Application.settings.webhook_url.include?('$FILE')
         begin
           open(
@@ -35,15 +36,18 @@ class Chunk
               http_basic_authentication: Sinatra::Application.settings.webhook_credentials
           )
         rescue OpenURI::HTTPError => e
-          $stderr.puts(e.inspect)
+          $stderr.puts(e.io.status)
         end
       end
+      complete = true
+    else
+      complete = false
     end
 
-    {name: @file_name, size: expected_bytes, uploadedBytes: file_size}
+    {name: @file_name, size: expected_bytes, uploadedBytes: uploaded_bytes, complete: complete}
   end
 
-  def exists?
+  def file_complete?
     File.exists?(@file_path)
   end
 
