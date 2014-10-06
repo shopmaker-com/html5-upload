@@ -37,6 +37,8 @@ class Chunk
           )
         rescue OpenURI::HTTPError => e
           $stderr.puts(e.io.status)
+        rescue StandardError => e
+          $stderr.puts(e.inspect)
         end
       end
       complete = true
