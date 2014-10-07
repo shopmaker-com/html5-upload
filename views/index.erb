@@ -87,7 +87,7 @@
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-download fade">
+    <tr class="template-download fade" id="{%=file.id%}">
         <td>
             <p class="name">{%=file.name%}</p>
         </td>
@@ -117,6 +117,7 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+<script src="/javascripts/jquery.md5.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="/javascripts/tmpl.min.js"></script>
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
@@ -156,6 +157,8 @@
             alert(file.error);
           } else {
             data.uploadedBytes = file && file.size;
+            var resumeable = $('#' + $.md5(file.name));
+            if(resumeable) { resumeable.hide(); }
             $.blueimp.fileupload.prototype.options.add.call(that, e, data);
           }
         });
