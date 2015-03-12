@@ -3,3 +3,6 @@ coverage
 tmp
 upload
 log
+config/config.yml
+config/deploy/production.rb
+config/deploy.rb
