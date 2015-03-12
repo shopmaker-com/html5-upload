@@ -70,6 +70,7 @@ get '/list' do
   files = []
   Dir.glob("#{@upload_dir}/*.*").each do |file|
     hash = {
+        id: Digest::MD5.hexdigest(File.basename(file, '.part')),
         name: File.basename(file, '.part'),
         size: File.size(file),
     }
