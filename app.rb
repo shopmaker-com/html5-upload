@@ -20,7 +20,7 @@ end
 
 helpers do
   def validate_file_extension(file)
-    ext = File.extname(file)[1..-1]
+    ext = File.extname(file)[1..-1].to_s.downcase
     halt(415, "ext <#{ext}> not allowed") unless settings.accepted_file_types.include?(ext)
   end
 end
