@@ -64,7 +64,7 @@
   We accept the following files:
   <ul>
     <li>Images: Compress multiple JPG files as .zip files</li>
-    <li>Videos: The following extensions are allowed: <%= settings.accepted_file_types.map {|v| ".#{v}"}.join(', ') %></li>
+    <li>Videos: The following extensions are allowed: <%= (settings.accepted_file_types-['zip']).map {|v| ".#{v}"}.join(', ') %></li>
   </ul>
 </form>
 
