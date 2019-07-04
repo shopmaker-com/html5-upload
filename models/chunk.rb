@@ -46,11 +46,11 @@ class Chunk
   end
 
   def file_complete?
-    File.exists?(@file_path)
+    File.exist?(@file_path)
   end
 
   def file_size
-    File.exists?(@partial_file_path) ? File.size(@partial_file_path) : 0
+    File.exist?(@partial_file_path) ? File.size(@partial_file_path) : 0
   end
 
   def fire_webhook(file)
