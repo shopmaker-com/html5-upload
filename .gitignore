@@ -1,6 +1,5 @@
 .bundle
 coverage
-tmp
 upload
 log
 config/config.yml
