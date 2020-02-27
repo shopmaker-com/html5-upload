@@ -14,7 +14,7 @@ class Chunk
 
   def upload(temp_file, content_range)
     # extract data about incoming file chunk from the http_content_range header
-    if (content_range = content_range.match(/[0-9]+-([0-9]+)\/([0-9]+)/))
+    if (content_range = content_range.to_s.match(/[0-9]+-([0-9]+)\/([0-9]+)/))
       uploaded_bytes = content_range[1].to_i
       expected_bytes = content_range[2].to_i
     else

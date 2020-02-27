@@ -63,6 +63,7 @@
   <br />
   We accept the following files:
   <ul>
+    <li>Minimum file size: 1 Megabyte</li>
     <li>Images: Compress multiple JPG files as .zip files</li>
     <li>Videos: The following extensions are allowed: <%= (settings.accepted_file_types-['zip']).map {|v| ".#{v}"}.join(', ') %></li>
   </ul>
@@ -150,7 +151,8 @@
       formData: {id: <%= params[:id] %>, secret: '<%= params[:secret] %>'},
       maxChunkSize: 1024 * 1024, //1 megabyte
       acceptFileTypes: /(\.|\/)(<%= settings.accepted_file_types.join('|') %>)$/i,
-      maxRetries: 100,
+      minFileSize: 1024 * 1024, //1 megabyte
+      maxRetries: 3,
       retryTimeout: 500,
       sequentialUploads: true,
       dropZone: $('#dropzone'),
