@@ -6,6 +6,10 @@ require_relative 'models/chunk'
 
 config_file 'config/config.yml'
 
+configure :production do
+  disable :logging # https://groups.google.com/g/sinatrarb/c/lwd419mimJA
+end
+
 before do
   if params[:id].to_i.zero?
     halt(403, 'ERROR: id not set')
