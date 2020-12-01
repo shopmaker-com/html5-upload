@@ -39,6 +39,9 @@ post '/upload' do
   files = []
 
   params[:files].each do |file|
+    # fix Encoding::UndefinedConversionError - "\xC3" from ASCII-8BIT to UTF-8
+    file[:filename].force_encoding('UTF-8')
+
     validate_file_extension(file[:filename])
     chunk = Chunk.new(@upload_dir, file[:filename])
     files << chunk.upload(file[:tempfile].path, request.env['HTTP_CONTENT_RANGE'])
