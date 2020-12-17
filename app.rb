@@ -2,25 +2,28 @@ require 'sinatra'
 require 'sinatra/config_file'
 require 'sinatra/reloader' if development?
 require 'json'
-require 'exception_notification'
+require 'logger'
 require_relative 'models/chunk'
 
 config_file 'config/config.yml'
 
-use ExceptionNotification::Rack,
-    email: {
-      email_prefix: '[html5-upload] ',
-      sender_address: settings.exception_sender,
-      exception_recipients: Array(settings.exception_receiver),
-      sections: %w(request data backtrace environment session),
-      # smtp_settings: {
-      #   address: 'localhost',
-      #   port: 1025
-      # }
-    }
+# use Rack::MailExceptions do |mail|
+#   mail.from settings.exception_sender
+#   mail.to settings.exception_receiver
+#   mail.smtp false
+# end
+
+# https://spin.atomicobject.com/2013/11/12/production-logging-sinatra/
+# ::Logger.class_eval { alias :write :'<<' }
+error_logger = ::File.new(::File.join(::File.dirname(::File.expand_path(__FILE__)),'log/error.log'), 'a+')
+error_logger.sync = true
+before {
+  env['rack.errors'] =  error_logger
+}
 
 configure :production do
   disable :logging # https://groups.google.com/g/sinatrarb/c/lwd419mimJA
+  enable :dump_errors, :raise_errors
 end
 
 before do
