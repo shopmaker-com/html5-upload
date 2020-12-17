@@ -4,6 +4,7 @@ gem 'rake'
 gem 'irb'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'exception_notification'
 
 group :development do
   gem 'capistrano'
@@ -11,6 +12,7 @@ group :development do
   gem 'capistrano-rvm'
   gem 'capistrano-pending', require: false
   gem 'capistrano-passenger', require: false
+  gem 'mailcatcher'
 end
 
 group :test do

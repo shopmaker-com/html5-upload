@@ -4,6 +4,8 @@ development: &common_settings
   webhook_credentials: [admin, password]
   upload_dir: upload
   accepted_file_types: [zip,mpg,mpeg,mp4,avi,wmv,mkv,mov]
+  exception_sender: '"ExceptionNotification" <sender@example.com>'
+  exception_receiver: receiver@example.com
 
 test:
   <<: *common_settings

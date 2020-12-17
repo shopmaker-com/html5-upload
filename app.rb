@@ -2,9 +2,22 @@ require 'sinatra'
 require 'sinatra/config_file'
 require 'sinatra/reloader' if development?
 require 'json'
+require 'exception_notification'
 require_relative 'models/chunk'
 
 config_file 'config/config.yml'
+
+use ExceptionNotification::Rack,
+    email: {
+      email_prefix: '[html5-upload] ',
+      sender_address: settings.exception_sender,
+      exception_recipients: Array(settings.exception_receiver),
+      sections: %w(request data backtrace environment session),
+      # smtp_settings: {
+      #   address: 'localhost',
+      #   port: 1025
+      # }
+    }
 
 configure :production do
   disable :logging # https://groups.google.com/g/sinatrarb/c/lwd419mimJA
@@ -31,6 +44,8 @@ end
 
 # displays frontend
 get '/' do
+  raise StandardError, "ERROR: #{params[:error]}" unless params[:error].blank?
+
   erb :index
 end
 
@@ -49,7 +64,7 @@ post '/upload' do
 
   if files.any?
     status 201
-    {files: files}.to_json
+    { files: files }.to_json
   else
     raise 'should not happen'
   end
@@ -60,12 +75,12 @@ get '/upload' do
   if params[:file]
     chunk = Chunk.new(@upload_dir, params[:file])
     if chunk.file_complete?
-      {file: {
-          name: chunk.file_name,
-          error: "ERROR: The file '#{chunk.file_name}' already exists at the server."}
+      { file: {
+        name: chunk.file_name,
+        error: "ERROR: The file '#{chunk.file_name}' already exists at the server." }
       }.to_json
     else
-      {file: {name: chunk.file_name, size: chunk.file_size}}.to_json
+      { file: { name: chunk.file_name, size: chunk.file_size } }.to_json
     end
   else
     raise 'should not happen'
@@ -77,9 +92,9 @@ get '/list' do
   files = []
   Dir.glob("#{@upload_dir}/*.*").each do |file|
     hash = {
-        id: Digest::MD5.hexdigest(File.basename(file, '.part')),
-        name: File.basename(file, '.part'),
-        size: File.size(file),
+      id: Digest::MD5.hexdigest(File.basename(file, '.part')),
+      name: File.basename(file, '.part'),
+      size: File.size(file),
     }
     if File.extname(file) == '.part'
       hash[:delete_url] = "/delete?id=#{params[:id]}&secret=#{params[:secret]}&file=#{CGI.escape(File.basename(file))}"
@@ -88,16 +103,16 @@ get '/list' do
     end
     files << hash
   end
-  {files: files}.to_json
+  { files: files }.to_json
 end
 
 delete '/delete' do
   file = "#{@upload_dir}/#{File.basename(params[:file])}"
   if File.file?(file) && File.delete(file)
     {
-        files: [
-            {params[:file] => true}
-        ]
+      files: [
+        { params[:file] => true }
+      ]
     }.to_json
   else
     raise 'should not happen'
