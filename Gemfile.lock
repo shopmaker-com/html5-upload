@@ -24,6 +24,9 @@ GEM
     io-console (0.5.6)
     irb (1.2.7)
       reline (>= 0.1.5)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
+    mini_mime (1.0.2)
     minitest (5.14.2)
     multi_json (1.15.0)
     mustermann (1.1.1)
@@ -32,6 +35,8 @@ GEM
       net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (6.1.0)
     rack (2.2.3)
+    rack-contrib (2.3.0)
+      rack (~> 2.0)
     rack-protection (2.1.0)
       rack
     rake (13.0.1)
@@ -70,7 +75,9 @@ DEPENDENCIES
   capistrano-pending
   capistrano-rvm
   irb
+  mail
   minitest
+  rack-contrib
   rake
   simplecov
   sinatra

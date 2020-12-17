@@ -1,3 +1,4 @@
+require 'rack/contrib'
 require 'sinatra'
 require 'sinatra/config_file'
 require 'sinatra/reloader' if development?
@@ -7,11 +8,12 @@ require_relative 'models/chunk'
 
 config_file 'config/config.yml'
 
-# use Rack::MailExceptions do |mail|
-#   mail.from settings.exception_sender
-#   mail.to settings.exception_receiver
-#   mail.smtp false
-# end
+use Rack::MailExceptions do |mail|
+  mail.subject '[html5-upload] %s'
+  mail.from settings.exception_sender
+  mail.to settings.exception_receiver
+  mail.smtp false
+end if settings.exception_receiver
 
 # https://spin.atomicobject.com/2013/11/12/production-logging-sinatra/
 # ::Logger.class_eval { alias :write :'<<' }
@@ -47,7 +49,7 @@ end
 
 # displays frontend
 get '/' do
-  raise StandardError, "ERROR: #{params[:error]}" unless params[:error].blank?
+  raise StandardError, "ERROR: #{params[:error]}" unless params[:error].nil?
 
   erb :index
 end

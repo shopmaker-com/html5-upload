@@ -4,6 +4,8 @@ gem 'rake'
 gem 'irb'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'rack-contrib'
+gem 'mail' # dependency of rack-contribs MailExceptions
 
 group :development do
   gem 'capistrano'
