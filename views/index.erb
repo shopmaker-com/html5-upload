@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title><%= params[:title] ? "File upload for #{params[:title]}" : 'File upload' %></title>
-  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/vader/jquery-ui.css" id="theme">
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/vader/jquery-ui.css" id="theme">
   <link rel="stylesheet" href="/stylesheets/application.css">
   <link rel="stylesheet" href="/stylesheets/jquery.fileupload.css">
   <link rel="stylesheet" href="/stylesheets/jquery.fileupload-ui.css">
@@ -64,7 +64,7 @@
   We accept the following files:
   <ul>
     <li>Minimum file size: 1 Megabyte</li>
-    <li>Images: Compress multiple JPG files as .zip files</li>
+    <li>Images: Compress multiple .jpg files as .zip files</li>
     <li>Videos: The following extensions are allowed: <%= (settings.accepted_file_types-['zip']).map {|v| ".#{v}"}.join(', ') %></li>
   </ul>
 </form>
@@ -127,7 +127,7 @@
 </script>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="/javascripts/jquery.md5.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="/javascripts/tmpl.min.js"></script>
