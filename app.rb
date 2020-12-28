@@ -17,10 +17,10 @@ end if settings.exception_receiver
 
 # https://spin.atomicobject.com/2013/11/12/production-logging-sinatra/
 # ::Logger.class_eval { alias :write :'<<' }
-error_logger = ::File.new(::File.join(::File.dirname(::File.expand_path(__FILE__)),'log/error.log'), 'a+')
+error_logger = ::File.new(::File.join(::File.dirname(::File.expand_path(__FILE__)), 'log/error.log'), 'a+')
 error_logger.sync = true
 before {
-  env['rack.errors'] =  error_logger
+  env['rack.errors'] = error_logger
 }
 
 configure :production do
@@ -113,13 +113,18 @@ end
 
 delete '/delete' do
   file = "#{@upload_dir}/#{File.basename(params[:file])}"
-  if File.file?(file) && File.delete(file)
-    {
-      files: [
-        { params[:file] => true }
-      ]
-    }.to_json
+
+  if File.file?(file)
+    if File.delete(file)
+      {
+        files: [
+          { params[:file] => true }
+        ]
+      }.to_json
+    else
+      raise "should not happen: Error deleting #{file}"
+    end
   else
-    raise 'should not happen'
+    raise "should not happen: Error finding file #{file}"
   end
 end
