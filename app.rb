@@ -1,3 +1,4 @@
+require_relative 'lib/middleware/bad_multipart_form_data_sanitizer'
 require 'rack/contrib'
 require 'sinatra'
 require 'sinatra/config_file'
