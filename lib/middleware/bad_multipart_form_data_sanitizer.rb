@@ -1,3 +1,5 @@
+# test with:
+# curl -i -X POST -H 'Content-Type: multipart/form-data; boundary=dummy' 'URL'
 class BadMultipartFormDataSanitizer
   def initialize(app)
     @app = app
@@ -18,4 +20,4 @@ class BadMultipartFormDataSanitizer
   end
 end
 
-use BadMultipartFormDataSanitizer
+# use BadMultipartFormDataSanitizer
