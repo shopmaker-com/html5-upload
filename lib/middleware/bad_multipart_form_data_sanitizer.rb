@@ -17,3 +17,5 @@ class BadMultipartFormDataSanitizer
     @app.call(env)
   end
 end
+
+use BadMultipartFormDataSanitizer

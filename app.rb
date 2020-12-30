@@ -1,6 +1,6 @@
-require_relative 'lib/middleware/bad_multipart_form_data_sanitizer'
 require 'rack/contrib'
 require 'sinatra'
+require_relative 'lib/middleware/bad_multipart_form_data_sanitizer'
 require 'sinatra/config_file'
 require 'sinatra/reloader' if development?
 require 'json'
