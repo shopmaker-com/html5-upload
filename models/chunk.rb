@@ -56,7 +56,7 @@ class Chunk
   def fire_webhook(file)
     return unless Sinatra::Application.settings.webhook_url.include?('$FILE')
 
-    open(
+    URI.open(
         Sinatra::Application.settings.webhook_url.sub('$FILE', CGI.escape(file)),
         http_basic_authentication: Sinatra::Application.settings.webhook_credentials
     )
